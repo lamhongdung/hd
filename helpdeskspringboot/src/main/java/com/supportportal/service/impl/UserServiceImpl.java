@@ -69,7 +69,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             LOGGER.error(NO_USER_FOUND_BY_USERNAME + username);
             throw new UsernameNotFoundException(NO_USER_FOUND_BY_USERNAME + username);
         } else { // found user
-//            validateLoginAttempt(user);
+            validateLoginAttempt(user);
             user.setLastLoginDateDisplay(user.getLastLoginDate());
             user.setLastLoginDate(new Date());
             // update value of last login date
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         user.setProfileImageUrl(getTemporaryProfileImageUrl(username));
         userRepository.save(user);
         LOGGER.info("New user password: " + password);
-//        emailService.sendNewPasswordEmail(firstName, password, email);
+        emailService.sendNewPasswordEmail(firstName, password, email);
         return user;
     }
 
@@ -186,7 +186,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     private void saveProfileImage(User user, MultipartFile profileImage) throws IOException, NotAnImageFileException {
-        if (profileImage != null) {
+        if (profileImage != null) { // ex: user/home/supportportal/user/rick
             if(!Arrays.asList(IMAGE_JPEG_VALUE, IMAGE_PNG_VALUE, IMAGE_GIF_VALUE).contains(profileImage.getContentType())) {
                 throw new NotAnImageFileException(profileImage.getOriginalFilename() + NOT_AN_IMAGE_FILE);
             }
@@ -228,6 +228,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         return RandomStringUtils.randomNumeric(10);
     }
 
+    //
+    // can remove this part
+    //
     private void validateLoginAttempt(User user) {
         if(user.isNotLocked()) {
             if(loginAttemptService.hasExceededMaxAttempts(user.getUsername())) {

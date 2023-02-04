@@ -17,6 +17,7 @@ public class AuthenticationFailureListener {
         this.loginAttemptService = loginAttemptService;
     }
 
+    // listen on the event AuthenticationFailureBadCredentialsEvent
     @EventListener
     public void onAuthenticationFailure(AuthenticationFailureBadCredentialsEvent event) {
         Object principal = event.getAuthentication().getPrincipal();

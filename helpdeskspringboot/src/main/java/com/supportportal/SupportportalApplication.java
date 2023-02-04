@@ -19,6 +19,7 @@ public class SupportportalApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SupportportalApplication.class, args);
+
 		new File(USER_FOLDER).mkdirs();
 	}
 
