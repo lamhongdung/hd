@@ -113,6 +113,7 @@ public class UserResource extends ExceptionHandling {
     }
 
     @DeleteMapping("/delete/{username}")
+    // The @PreAuthorize annotation checks the given expression before entering the method
     @PreAuthorize("hasAnyAuthority('user:delete')")
     public ResponseEntity<HttpResponse> deleteUser(@PathVariable("username") String username) throws IOException {
         userService.deleteUser(username);
@@ -127,6 +128,7 @@ public class UserResource extends ExceptionHandling {
 
     @GetMapping(path = "/image/{username}/{fileName}", produces = IMAGE_JPEG_VALUE)
     public byte[] getProfileImage(@PathVariable("username") String username, @PathVariable("fileName") String fileName) throws IOException {
+        // ex: "user.home" + "/supportportal/user/dunglh/dunglh.jpg"
         return Files.readAllBytes(Paths.get(USER_FOLDER + username + FORWARD_SLASH + fileName));
     }
 
@@ -138,6 +140,7 @@ public class UserResource extends ExceptionHandling {
             int bytesRead;
             byte[] chunk = new byte[1024];
             while((bytesRead = inputStream.read(chunk)) > 0) {
+                // read each 1024 bytes: 0 - 1024, 0 - 1024, 0 - 1024,...
                 byteArrayOutputStream.write(chunk, 0, bytesRead);
             }
         }
