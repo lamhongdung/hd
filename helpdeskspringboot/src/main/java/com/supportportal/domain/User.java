@@ -11,12 +11,14 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false, updatable = false)
+    // for security: allow set value of id but do not allow read id
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private Long id;
     private String userId;
     private String firstName;
     private String lastName;
     private String username;
+    // for security: allow set value of password, but do not allow read id
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String email;
