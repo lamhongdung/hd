@@ -81,7 +81,7 @@ public class UserResource extends ExceptionHandling {
                                            @RequestParam("role") String role,
                                            @RequestParam("isActive") String isActive,
                                            @RequestParam("isNonLocked") String isNonLocked,
-                                           @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException {
+                                           @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException, MessagingException {
         User newUser = userService.addNewUser(firstName, lastName, username,email, role, Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
         return new ResponseEntity<>(newUser, OK);
     }
@@ -120,7 +120,9 @@ public class UserResource extends ExceptionHandling {
 
     @DeleteMapping("/delete/{username}")
     // The @PreAuthorize annotation checks the given expression before entering the method
-    @PreAuthorize("hasAnyAuthority('user:delete')")
+//    @PreAuthorize("hasAnyAuthority('user:delete')")
+//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
     public ResponseEntity<HttpResponse> deleteUser(@PathVariable("username") String username) throws IOException {
         userService.deleteUser(username);
         return response(OK, USER_DELETED_SUCCESSFULLY);

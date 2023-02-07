@@ -25,7 +25,7 @@ public class User implements Serializable {
     private String firstName;
     private String lastName;
     private String username;
-    // for security: allow set value of password, but do not allow read id
+    // WRITE_ONLY: allow set value of password, but do not allow read id
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String email;

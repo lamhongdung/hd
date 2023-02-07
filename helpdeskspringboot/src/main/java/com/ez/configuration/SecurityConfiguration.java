@@ -62,6 +62,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authenticationEntryPoint(jwtAuthenticationEntryPoint)
                 .and()
                 .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+
+//        http.csrf().disable().cors().and()
+//                .sessionManagement().sessionCreationPolicy(STATELESS)
+//                // do not need authenticate for PUBLIC_URLs
+//                .and().authorizeRequests()
+////                .antMatchers("/delete").hasAnyRole("ADMIN", "SUPER_ADMIN")
+//                .antMatchers("/delete").hasAnyRole("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
+//                .antMatchers(PUBLIC_URLS).permitAll()
+//                .anyRequest().authenticated()
+//                .and()
+//                .exceptionHandling().accessDeniedHandler(jwtAccessDeniedHandler)
+//                .authenticationEntryPoint(jwtAuthenticationEntryPoint)
+//                .and()
+//                .addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
