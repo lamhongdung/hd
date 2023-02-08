@@ -22,7 +22,9 @@ import static org.springframework.security.config.http.SessionCreationPolicy.STA
 
 
 @Configuration
+// allows Spring to find and automatically apply the class to the global Web Security
 @EnableWebSecurity
+// prePostEnabled = true: means enables @PreAuthorize, @PostAuthorize
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private JwtAuthorizationFilter jwtAuthorizationFilter;
