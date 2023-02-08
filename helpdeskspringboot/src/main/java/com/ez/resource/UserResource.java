@@ -33,7 +33,7 @@ import static org.springframework.http.HttpStatus.*;
 import static org.springframework.http.MediaType.IMAGE_JPEG_VALUE;
 
 @RestController
-@RequestMapping(path = { "/", "/user"})
+@RequestMapping(path = {"/", "/user"})
 public class UserResource extends ExceptionHandling {
     public static final String EMAIL_SENT = "An email with a new password was sent to: ";
 
@@ -53,10 +53,11 @@ public class UserResource extends ExceptionHandling {
     @PostMapping("/login")
     public ResponseEntity<User> login(@RequestBody User user) {
         // if username or password is invalid then throw an exception
-        authenticate(user.getUsername(), user.getPassword());
+        authenticate(user.getEmail(), user.getPassword());
 
         // authenticate success(username and password are correct)
-        User loginUser = userService.findUserByUsername(user.getUsername());
+//        User loginUser = userService.findUserByUsername(user.getUsername());
+        User loginUser = userService.findUserByEmail(user.getEmail());
 
         // get generate JWT and send back to client
         UserPrincipal userPrincipal = new UserPrincipal(loginUser);
@@ -64,47 +65,49 @@ public class UserResource extends ExceptionHandling {
         return new ResponseEntity<>(loginUser, jwtHeader, OK);
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, UsernameExistException, EmailExistException, MessagingException {
-
-        // if register successful than send random password to register via email
-        User newUser = userService.register(user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail());
-        return new ResponseEntity<>(newUser, OK);
-    }
+//    @PostMapping("/register")
+//    public ResponseEntity<User> register(@RequestBody User user) throws UserNotFoundException, UsernameExistException, EmailExistException, MessagingException {
+//
+//        // if register successful than send random password to register via email
+//        User newUser = userService.register(user.getFirstName(), user.getLastName(), user.getUsername(), user.getEmail());
+//        return new ResponseEntity<>(newUser, OK);
+//    }
 
     // need to make a similar "/users"
-    @PostMapping("/add")
-    public ResponseEntity<User> addNewUser(@RequestParam("firstName") String firstName,
-                                           @RequestParam("lastName") String lastName,
-                                           @RequestParam("username") String username,
-                                           @RequestParam("email") String email,
-                                           @RequestParam("role") String role,
-                                           @RequestParam("isActive") String isActive,
-                                           @RequestParam("isNonLocked") String isNonLocked,
-                                           @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException, MessagingException {
-        User newUser = userService.addNewUser(firstName, lastName, username,email, role, Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
-        return new ResponseEntity<>(newUser, OK);
-    }
+//    @PostMapping("/add")
+//    public ResponseEntity<User> addNewUser(@RequestParam("firstName") String firstName,
+//                                           @RequestParam("lastName") String lastName,
+//                                           @RequestParam("username") String username,
+//                                           @RequestParam("email") String email,
+//                                           @RequestParam("role") String role,
+//                                           @RequestParam("isActive") String isActive
+////                                           @RequestParam("isNonLocked") String isNonLocked,
+////                                           @RequestParam(value = "profileImage", required = false) MultipartFile profileImage
+//    ) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException, MessagingException {
+////        User newUser = userService.addNewUser(firstName, lastName, username, email, role, Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
+//        User newUser = userService.addNewUser(firstName, lastName, username, email, role, Boolean.parseBoolean(isActive));
+//        return new ResponseEntity<>(newUser, OK);
+//    }
 
-    @PostMapping("/update")
-    public ResponseEntity<User> update(@RequestParam("currentUsername") String currentUsername,
-                                       @RequestParam("firstName") String firstName,
-                                       @RequestParam("lastName") String lastName,
-                                       @RequestParam("username") String username,
-                                       @RequestParam("email") String email,
-                                       @RequestParam("role") String role,
-                                       @RequestParam("isActive") String isActive,
-                                       @RequestParam("isNonLocked") String isNonLocked,
-                                       @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException {
-        User updatedUser = userService.updateUser(currentUsername, firstName, lastName, username,email, role, Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
-        return new ResponseEntity<>(updatedUser, OK);
-    }
+//    @PostMapping("/update")
+//    public ResponseEntity<User> update(@RequestParam("currentUsername") String currentUsername,
+//                                       @RequestParam("firstName") String firstName,
+//                                       @RequestParam("lastName") String lastName,
+//                                       @RequestParam("username") String username,
+//                                       @RequestParam("email") String email,
+//                                       @RequestParam("role") String role,
+//                                       @RequestParam("isActive") String isActive,
+//                                       @RequestParam("isNonLocked") String isNonLocked,
+//                                       @RequestParam(value = "profileImage", required = false) MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException {
+//        User updatedUser = userService.updateUser(currentUsername, firstName, lastName, username, email, role, Boolean.parseBoolean(isNonLocked), Boolean.parseBoolean(isActive), profileImage);
+//        return new ResponseEntity<>(updatedUser, OK);
+//    }
 
-    @GetMapping("/find/{username}")
-    public ResponseEntity<User> getUser(@PathVariable("username") String username) {
-        User user = userService.findUserByUsername(username);
-        return new ResponseEntity<>(user, OK);
-    }
+//    @GetMapping("/find/{username}")
+//    public ResponseEntity<User> getUser(@PathVariable("username") String username) {
+//        User user = userService.findUserByUsername(username);
+//        return new ResponseEntity<>(user, OK);
+//    }
 
     @GetMapping("/list")
     public ResponseEntity<List<User>> getAllUsers() {
@@ -112,48 +115,49 @@ public class UserResource extends ExceptionHandling {
         return new ResponseEntity<>(users, OK);
     }
 
-    @GetMapping("/resetpassword/{email}")
-    public ResponseEntity<HttpResponse> resetPassword(@PathVariable("email") String email) throws MessagingException, EmailNotFoundException {
-        userService.resetPassword(email);
-        return response(OK, EMAIL_SENT + email);
-    }
+//    @GetMapping("/resetpassword/{email}")
+//    public ResponseEntity<HttpResponse> resetPassword(@PathVariable("email") String email) throws MessagingException, EmailNotFoundException {
+//        userService.resetPassword(email);
+//        return response(OK, EMAIL_SENT + email);
+//    }
 
-    @DeleteMapping("/delete/{username}")
-    // The @PreAuthorize annotation checks the given expression before entering the method
-//    @PreAuthorize("hasAnyAuthority('user:delete')")
-//    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
-    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
-    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("username") String username) throws IOException {
-        userService.deleteUser(username);
-        return response(OK, USER_DELETED_SUCCESSFULLY);
-    }
+//    @DeleteMapping("/delete/{username}")
+//    // The @PreAuthorize annotation checks the given expression before entering the method
+////    @PreAuthorize("hasAnyAuthority('user:delete')")
+////    @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+////    @PreAuthorize("hasAnyRole('ROLE_ADMIN', 'ROLE_SUPER_ADMIN')")
+//    @PreAuthorize("hasAnyRole('ROLE_ADMIN')")
+//    public ResponseEntity<HttpResponse> deleteUser(@PathVariable("username") String username) throws IOException {
+//        userService.deleteUser(username);
+//        return response(OK, USER_DELETED_SUCCESSFULLY);
+//    }
 
-    @PostMapping("/updateProfileImage")
-    public ResponseEntity<User> updateProfileImage(@RequestParam("username") String username, @RequestParam(value = "profileImage") MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException {
-        User user = userService.updateProfileImage(username, profileImage);
-        return new ResponseEntity<>(user, OK);
-    }
+//    @PostMapping("/updateProfileImage")
+//    public ResponseEntity<User> updateProfileImage(@RequestParam("username") String username, @RequestParam(value = "profileImage") MultipartFile profileImage) throws UserNotFoundException, UsernameExistException, EmailExistException, IOException, NotAnImageFileException {
+//        User user = userService.updateProfileImage(username, profileImage);
+//        return new ResponseEntity<>(user, OK);
+//    }
 
-    @GetMapping(path = "/image/{username}/{fileName}", produces = IMAGE_JPEG_VALUE)
-    public byte[] getProfileImage(@PathVariable("username") String username, @PathVariable("fileName") String fileName) throws IOException {
-        // ex: "user.home" + "/supportportal/user/dunglh/dunglh.jpg"
-        return Files.readAllBytes(Paths.get(USER_FOLDER + username + FORWARD_SLASH + fileName));
-    }
+//    @GetMapping(path = "/image/{username}/{fileName}", produces = IMAGE_JPEG_VALUE)
+//    public byte[] getProfileImage(@PathVariable("username") String username, @PathVariable("fileName") String fileName) throws IOException {
+//        // ex: "user.home" + "/supportportal/user/dunglh/dunglh.jpg"
+//        return Files.readAllBytes(Paths.get(USER_FOLDER + username + FORWARD_SLASH + fileName));
+//    }
 
-    @GetMapping(path = "/image/profile/{username}", produces = IMAGE_JPEG_VALUE)
-    public byte[] getTempProfileImage(@PathVariable("username") String username) throws IOException {
-        URL url = new URL(TEMP_PROFILE_IMAGE_BASE_URL + username);
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        try (InputStream inputStream = url.openStream()) {
-            int bytesRead;
-            byte[] chunk = new byte[1024];
-            while((bytesRead = inputStream.read(chunk)) > 0) {
-                // read each 1024 bytes: 0 - 1024, 0 - 1024, 0 - 1024,...
-                byteArrayOutputStream.write(chunk, 0, bytesRead);
-            }
-        }
-        return byteArrayOutputStream.toByteArray();
-    }
+//    @GetMapping(path = "/image/profile/{username}", produces = IMAGE_JPEG_VALUE)
+//    public byte[] getTempProfileImage(@PathVariable("username") String username) throws IOException {
+//        URL url = new URL(TEMP_PROFILE_IMAGE_BASE_URL + username);
+//        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+//        try (InputStream inputStream = url.openStream()) {
+//            int bytesRead;
+//            byte[] chunk = new byte[1024];
+//            while ((bytesRead = inputStream.read(chunk)) > 0) {
+//                // read each 1024 bytes: 0 - 1024, 0 - 1024, 0 - 1024,...
+//                byteArrayOutputStream.write(chunk, 0, bytesRead);
+//            }
+//        }
+//        return byteArrayOutputStream.toByteArray();
+//    }
 
     private ResponseEntity<HttpResponse> response(HttpStatus httpStatus, String message) {
         return new ResponseEntity<>(new HttpResponse(httpStatus.value(), httpStatus, httpStatus.getReasonPhrase().toUpperCase(),
