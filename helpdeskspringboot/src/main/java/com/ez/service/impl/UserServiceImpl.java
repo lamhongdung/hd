@@ -9,8 +9,6 @@ import com.ez.service.EmailService;
 import com.ez.service.LoginAttemptService;
 import com.ez.service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,27 +18,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.mail.MessagingException;
 import javax.transaction.Transactional;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import static com.ez.constant.FileConstant.*;
-import static com.ez.constant.FileConstant.NOT_AN_IMAGE_FILE;
 import static com.ez.constant.UserImplConstant.*;
-import static com.ez.enumeration.Role.*;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.springframework.http.MediaType.*;
 
 @Service
 @Transactional
@@ -62,21 +47,35 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         this.emailService = emailService;
     }
 
+    // get user info by email id
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) {
 //        User user = userRepository.findUserByUsername(username);
-        User user = userRepository.findUserByEmail(username);
+
+        // get user by email id
+        User user = userRepository.findUserByEmail(email);
+
+        // not found user by email
         if (user == null) {
-            LOGGER.error(NO_USER_FOUND_BY_USERNAME + username);
-            throw new UsernameNotFoundException(NO_USER_FOUND_BY_USERNAME + username);
-        } else { // found user
+            LOGGER.error(NO_USER_FOUND_BY_EMAIL + email);
+//            throw new EmailNotFoundException(NO_USER_FOUND_BY_EMAIL + email);
+            throw new UsernameNotFoundException(NO_USER_FOUND_BY_EMAIL + email);
+        } else { // found user by email
 //            validateLoginAttempt(user);
+
             user.setLastLoginDateDisplay(user.getLastLoginDate());
+
+            // update last login date is on current date
             user.setLastLoginDate(new Date());
-            // update value of last login date
+
+            // update value of lastLoginDate and lastLoginDateDisplay
             userRepository.save(user);
+
             UserPrincipal userPrincipal = new UserPrincipal(user);
-            LOGGER.info(FOUND_USER_BY_USERNAME + username);
+
+            LOGGER.info(FOUND_USER_BY_EMAIL + email);
             return userPrincipal;
         }
     }

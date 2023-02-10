@@ -46,8 +46,9 @@ CREATE TABLE `user` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO `user`(email, password, firstName, lastName, phone, address, role, isActive, joinDate, lastLoginDate, lastLoginDateDisplay) 
-VALUES ('dunglh@gmail.com', '$2a$12$CR0useg0GQlwrYMvylhHROZg0Vq5nr7jRILz14lc.ArB9iuw1wsEC', 'Hong Dung', 'Lam', '0986111222', '123 Tran Hung Dao', 'ROLE_ADMIN', 1, now(), now(), now());
+INSERT INTO `user`(email, password, firstName, lastName, phone, address, role, isActive, joinDate, lastLoginDate, lastLoginDateDisplay) VALUES
+('dunglh@gmail.com', '$2a$12$CR0useg0GQlwrYMvylhHROZg0Vq5nr7jRILz14lc.ArB9iuw1wsEC', 'Hong Dung', 'Lam', '0986111222', '123 Tran Hung Dao', 'ROLE_ADMIN', 1, now(), now(), now()),
+('dunglh13@gmail.com', '$2a$12$CR0useg0GQlwrYMvylhHROZg0Vq5nr7jRILz14lc.ArB9iuw1wsEC', 'Hong Dung', 'Lam', '0986111222', '123 Tran Hung Dao', 'ROLE_CUSTOMER', 1, now(), now(), now());
 
 
 
